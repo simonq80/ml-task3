@@ -49,7 +49,7 @@ yTarget = dataset['gender'].values.astype('U')
 #X_tfidf = tfidf_transformer.fit_transform(X_counts)
 
 # split into trainset and testset, 0.8 and 0.2
-X,X_test,Y,Y_test = train_test_split(xData,yTarget,test_size=0.2,random_state=0,shuffle=True)
+X,X_test,Y,Y_test = train_test_split(xData,yTarget,test_size=0.3,random_state=0,shuffle=True)
 
 X = np.array(X)
 Y = np.array(Y)
