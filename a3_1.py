@@ -21,7 +21,7 @@ from sklearn.metrics import classification_report
 
 # K Nearest Neighbor, K = 5
 
-dataP2 = "gender-classifier-DFE-791531.csv"
+dataP2 = "twitter_gender.csv"
 
 
 # play with dataset dataP2
@@ -139,8 +139,3 @@ print()
 y_true, y_pred = Y_test, gs_clf.predict(X_test)
 print(classification_report(y_true, y_pred))
 print()
-
-
-
-
-
