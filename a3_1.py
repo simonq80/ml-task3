@@ -121,6 +121,7 @@ mlp_clf = Pipeline([('vect', CountVectorizer()),
                 ])
 mlp_parameters = {
     'tfidf__use_idf': (True, False),
+    'clf__alpha': (1e-4, 1e-5),
     }
 
 gs_clf = GridSearchCV(mlp_clf, mlp_parameters, n_jobs=-1,cv=5)
