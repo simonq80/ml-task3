@@ -20,7 +20,7 @@ In text processing, we investigated if the profile's description could be used a
 
 | Name | Student # | Contributions |
 | --- | --- | --- |
-| Jinwei Yuan | id | Main developer of the text processing code - developed multinominal naive bayes, linear SVM and MLP classifiers |
+| Jinwei Yuan | 17306137 | Main developer of the text processing code - developed multinominal naive bayes, linear SVM and MLP classifiers |
 | Simon Quigley | id | Main developer of the number processing code - developed *** |
 | Patrick Geoghegan | 13320590 | Assited in development, analysis of results and writer of report |
 
