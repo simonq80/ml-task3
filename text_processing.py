@@ -19,7 +19,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
-# K Nearest Neighbor, K = 5
 
 dataP2 = "gender-classifier-DFE-791531.csv"
 
@@ -34,7 +33,7 @@ if not myfile.is_file():
     zip_ref.close()
 # load data, shuffle,
 dataset = pd.read_csv(dataP2,sep=',',encoding="latin-1")
-dataset=dataset.sample(frac=1)
+dataset=dataset.sample(random_state =1,frac=1)
 
 # replace NaN in gender column with 'unkown'
 # then only work with the rows with gender = 'male' or 'female'
@@ -68,7 +67,7 @@ mnb_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
     'clf__alpha': (0.1,0.25,0.5,0.75, 1.0),
     'clf__fit_prior': (True, False),
 }
-
+# K = 5 
 gs_clf = GridSearchCV(mnb_clf, mnb_parameters, n_jobs=-1,cv=5)
 gs_clf.fit(X,Y)
 print()
@@ -97,10 +96,10 @@ svm_clf = Pipeline([('vect', CountVectorizer()),
 svm_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
     'tfidf__use_idf': (True, False),
     'clf__alpha': (1e-3, 1e-4),
-    }
+}
 gs_clf = GridSearchCV(svm_clf, svm_parameters, n_jobs=-1,cv=5)
 gs_clf.fit(X,Y)
-print('GridSearchCV using svm_clf&svm_parameters. Here are the best score and best params')
+print('GridSearchCV using sgdc_clf&sgdc_parameters. Here are the best score and best params')
 print(gs_clf.best_score_)
 print(gs_clf.best_params_)
 print()
@@ -117,15 +116,15 @@ print()
 
 # mlp
 mlp_clf = Pipeline([('vect', CountVectorizer()),
-                ('tfidf', TfidfTransformer()),
-                ('clf', MLPClassifier(alpha=1e-05, hidden_layer_sizes=(5,), learning_rate='constant',
-                                      learning_rate_init=0.001, shuffle=True,
-                                      solver='lbfgs')),
-                ])
+                    ('tfidf', TfidfTransformer()),
+                    ('clf', MLPClassifier(alpha=1e-05, hidden_layer_sizes=(5,), learning_rate='constant',
+                                          learning_rate_init=0.001, shuffle=True,
+                                          solver='lbfgs')),
+                    ])
 mlp_parameters = {
     'tfidf__use_idf': (True, False),
     'clf__alpha': (1e-4, 1e-5),
-    }
+}
 
 gs_clf = GridSearchCV(mlp_clf, mlp_parameters, n_jobs=-1,cv=5)
 gs_clf.fit(X,Y)
