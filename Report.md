@@ -84,13 +84,25 @@ Next was choosing the best parameters. We ran a grid search cross validation on 
 
 ### 2b. Number Processing
 
-In number processing, we used the SVM algorithm using the fav_number, tweet_count, link_color and sidebar_color as our independent features. Of course, gender was our target feature. The gender feature was converted to dummy variables using One Hot Enoding. The link_color and sidebar_color features are hex values and so, for number processing, we converted the hex value into three features representing the red, green and blue values of the colours. Finally, the features used were normalised. These edited features were then used to train the model and make predictions. 
+In number processing, we used the SVM algorithm using the fav_number, tweet_count, link_color and sidebar_color as our independent features. Of course, gender was our target feature. The gender feature was converted to dummy variables using One Hot Enoding. The link_color and sidebar_color features are hex values and so, for number processing, we converted the hex value into three features representing the red, green and blue values of the colours. Finally, the features used were normalised. These edited features were then used to train the model and make predictions.
+
+TODO : Finding best parameters
+
+### 2c. Combining Text and Number Processing
 
 ## 3. Evaluation
 
 ### 3a. Text Processing
 
 From Section 2a, we have the best parameters for each of the three text processing algorithms. We compared these three algorithms against each other to identify which one provides the most accurate results. We performed a 3-fold cross validation. We found that MNB classifier is the most accurate. However, the accuracy is only 0.565. Although it is better than guessing the gender randomly (33% chance of being correct), it is not reliable enough for a prediction system.
+
+### 3b. Number Processing
+
+TODO: Talk about accuracy 
+
+### 3c. Text and Number Processing
+
+TODO : Talk about accuracy
 
 #### Algorithm accuracies
 
