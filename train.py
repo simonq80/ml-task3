@@ -1,6 +1,6 @@
 from sklearn import svm, metrics, preprocessing
 import csv
-import _pickle
+#import _pickle
 import random
 from sklearn.model_selection import train_test_split, cross_val_score
 
@@ -20,6 +20,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+import numpy as np
 
 
 def dataset_from_csv(datafile, independent_columns, color_columns, text_columns, dependent_column, valid_classes):
@@ -66,49 +67,75 @@ valid_classes = ['male', 'female', 'brand']
 independent_vars, dependent_vars = dataset_from_csv(datafile, independent_columns, color_columns, text_columns, dependent_column, valid_classes)
 
 
-x_train, x_test, y_train, y_test = train_test_split(independent_vars, dependent_vars, test_size=0.3)
-
-
 ### Text Processing
-print('Processing Text')
-text_classifiers = []
-for i in range(0, len(text_columns)): #Create text classifier for each text column
-    mnb_clf = Pipeline([('vect', CountVectorizer()),
-                        ('tfidf', TfidfTransformer()),
-                        ('clf',  MultinomialNB()),
-                        ])
-    mnb_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
-        'tfidf__use_idf': (True, False),
-        'clf__alpha': (0.1,0.25,0.5,0.75, 1.0),
-        'clf__fit_prior': (True, False),
-        }
+def train_text_cls(dataset, target, numrows):
+    text_classifiers = []
+    for i in range(0, numrows): #Create text classifier for each text column
+        mnb_clf = Pipeline([('vect', CountVectorizer()),
+                            ('tfidf', TfidfTransformer()),
+                            ('clf',  MultinomialNB()),
+                            ])
+        mnb_parameters = {'vect__ngram_range': [(1, 2)],
+            'tfidf__use_idf': ([True]),
+            'clf__alpha': ([0.75]),
+            'clf__fit_prior': ([True]),
+            }
 
-    gs_clf = GridSearchCV(mnb_clf, mnb_parameters, n_jobs=-1,cv=3)
-    gs_clf.fit([x[i] for x in x_train], y_train)
-    text_classifiers.append(gs_clf)
+        gs_clf = GridSearchCV(mnb_clf, mnb_parameters, n_jobs=-1,cv=3)
+        gs_clf.fit([x[i] for x in dataset], target)
+        text_classifiers.append(gs_clf)
+    return text_classifiers
 
-for row in x_train:
-    for clf in range(0, len(text_columns)):
-        pred = text_classifiers[clf].predict([row[clf]])[0]
-        new_vals = [0,0,0]
-        new_vals[valid_classes.index(pred)] = 1
-        row += new_vals
 
-x_train = preprocessing.scale(x_train)
+def process_text(dataset, clfs, numrows):
 
-print(x_train[:20])
+    for row in dataset:
+        for clf in range(0, numrows):
+            pred = clfs[clf].predict([row[clf]])[0]
+            new_vals = [0,0,0]
+            new_vals[valid_classes.index(pred)] = 1
+            row += new_vals
+
+    dataset = preprocessing.scale([x[numrows:] for x in dataset])
+
+    return dataset
+
+def split_test(indep_vars, dep_vars, test_size=0.3, offset=0):
+    start = int(len(dep_vars) * offset)
+    stop = int(len(indep_vars) * (offset + test_size))
+    x_train = indep_vars[:start] + indep_vars[stop:]
+    x_test = indep_vars[start:stop]
+    y_train = dep_vars[:start] + dep_vars[stop:]
+    y_test = dep_vars[start:stop]
+
+    clfs = train_text_cls(x_train, y_train, len(text_columns))
+    x_train = process_text(x_train, clfs, len(text_columns))
+    x_test = process_text(x_test, clfs, len(text_columns))
+
+    c = svm.SVC(probability=False)
+    c.fit(x_train, y_train)
+    return c.score(x_test, y_test)
+
+def nfold(indep_vars, dep_vars, folds=5):
+    results = []
+    for i in range(0, folds):
+        results.append(split_test(indep_vars, dep_vars, 1.0/folds, 1.0/folds*i))
+
+    return results
+
+
 
 
 if __name__ == "__main__":
-    c = svm.SVC(probability=False)
-    print('Training SVM...')
-    c.fit(x_train, y_train)
-    print(c.score(x_test, y_test))
+    print('70:30 Split:')
+    print(split_test(independent_vars, dependent_vars))
+    print('5-Fold:')
+    nf = nfold(independent_vars, dependent_vars)
+    print(nf)
+    print('Mean:')
+    print(np.mean(nf))
 
-    c = svm.SVC()
-    print(cross_val_score(c, independent_vars, dependent_vars, cv=5))
 
 
-
-    with open('svm.pkl', 'wb') as fid: #save svm
-        _pickle.dump(c, fid)
+    #with open('svm.pkl', 'wb') as fid: #save svm
+    #    _pickle.dump(c, fid)
