@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 
-dataP2 = "gender-classifier-DFE-791531.csv"
+dataP2 = "twitter_gender.csv"
 
 
 # play with dataset dataP2
@@ -67,7 +67,7 @@ mnb_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
     'clf__alpha': (0.1,0.25,0.5,0.75, 1.0),
     'clf__fit_prior': (True, False),
 }
-# K = 5 
+# K = 5
 gs_clf = GridSearchCV(mnb_clf, mnb_parameters, n_jobs=-1,cv=5)
 gs_clf.fit(X,Y)
 print()
@@ -142,8 +142,3 @@ print('score of test set:')
 scores = cross_val_score(gs_clf,X_test,Y_test,cv =3)
 print(np.mean(scores))
 print()
-
-
-
-
-
