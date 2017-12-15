@@ -82,6 +82,10 @@ Next was choosing the best parameters. We ran a grid search cross validation on 
 | **0.567** | **0.00001**  | **TRUE**  |
 | 0.561 | 1.00E-05 | FALSE |
 
+### 2b. Number Processing
+
+In number processing, we used the SVM algorithm using the fav_number, tweet_count, link_color and sidebar_color as our independent features. Of course, gender was our target feature. The gender feature was converted to dummy variables using One Hot Enoding. The link_color and sidebar_color features are hex values and so, for number processing, we converted the hex value into three features representing the red, green and blue values of the colours. Finally, the features used were normalised. These edited features were then used to train the model and make predictions. 
+
 ## 3. Evaluation
 
 ### 3a. Text Processing
