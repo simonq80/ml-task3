@@ -62,10 +62,8 @@ mnb_clf = Pipeline([('vect', CountVectorizer()),
                     ('tfidf', TfidfTransformer()),
                     ('clf',  MultinomialNB()),
                     ])
-mnb_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
-    'tfidf__use_idf': (True, False),
-    'clf__alpha': (0.1,0.25,0.5,0.75, 1.0),
-    'clf__fit_prior': (True, False),
+mnb_parameters = {
+    'clf__alpha': [(1.0)],
 }
 # K = 5
 gs_clf = GridSearchCV(mnb_clf, mnb_parameters, n_jobs=-1,cv=5)
@@ -93,9 +91,9 @@ svm_clf = Pipeline([('vect', CountVectorizer()),
                     ('tfidf', TfidfTransformer()),
                     ('clf',  SGDClassifier()),
                     ])
-svm_parameters = {'vect__ngram_range': [(1, 1), (1, 2)],
-    'tfidf__use_idf': (True, False),
-    'clf__alpha': (1e-3, 1e-4),
+svm_parameters = {'vect__ngram_range': [(1, 2)],
+    'tfidf__use_idf': [(True)],
+    'clf__alpha': (1.0, 0.1, 1e-2, 1e-3, 1e-4, 1e-5),
 }
 gs_clf = GridSearchCV(svm_clf, svm_parameters, n_jobs=-1,cv=5)
 gs_clf.fit(X,Y)
@@ -122,8 +120,7 @@ mlp_clf = Pipeline([('vect', CountVectorizer()),
                                           solver='lbfgs')),
                     ])
 mlp_parameters = {
-    'tfidf__use_idf': (True, False),
-    'clf__alpha': (1e-4, 1e-5),
+    'clf__alpha': (1.0, 0.1, 1e-2, 1e-3, 1e-4, 1e-5),
 }
 
 gs_clf = GridSearchCV(mlp_clf, mlp_parameters, n_jobs=-1,cv=5)

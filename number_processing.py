@@ -1,7 +1,8 @@
 from sklearn import svm, metrics, preprocessing
 import csv
-import _pickle
+#import _pickle
 import random
+import numpy
 from sklearn.model_selection import train_test_split, cross_val_score
 import colorsys
 
@@ -51,15 +52,15 @@ independent_vars = preprocessing.scale(independent_vars)
 x_train, x_test, y_train, y_test = train_test_split(independent_vars, dependent_vars, test_size=0.3)
 
 if __name__ == "__main__":
-    c = svm.SVC(probability=False)
+    c = svm.SVC(probability=False,verbose=True)
     print('Training SVM...')
     c.fit(x_train, y_train)
     print(c.score(x_test, y_test))
 
     c = svm.SVC()
-    print(cross_val_score(c, independent_vars, dependent_vars, cv=5))
+    print(numpy.mean(cross_val_score(c, independent_vars, dependent_vars, cv=10)))
 
 
 
-    with open('svm.pkl', 'wb') as fid: #save svm
-        _pickle.dump(c, fid)
+    #with open('svm.pkl', 'wb') as fid: #save svm
+    #    _pickle.dump(c, fid)
